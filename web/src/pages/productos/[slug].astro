@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import AddToCart from '../../components/AddToCart.astro';
+import { formatPrice, getProducts, type Product } from '../../lib/woocommerce';
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+const { product: p } = Astro.props as { product: Product };
+const img = p.images[0];
+---
+<Base title={p.name} description={p.short_description.replace(/<[^>]+>/g, '')}>
+  <article>
+    {img ? <img src={img.src} alt={img.alt || p.name} /> : <div class="ph" aria-hidden="true">♪</div>}
+    <div>
+      <p class="cats">{p.categories.map((c) => <a href={`/categoria/${c.slug}`}>{c.name}</a>)}</p>
+      <h1>{p.name}</h1>
+      <p class="precio">
+        {p.on_sale && <s>{formatPrice(p.prices.regular_price, p.prices)}</s>}
+        {formatPrice(p.prices.price, p.prices)}
+      </p>
+      <div set:html={p.short_description} />
+      <AddToCart product={p} />
+      <div class="desc" set:html={p.description} />
+    </div>
+  </article>
+</Base>
+<style>
+  article { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  @media (min-width: 760px) { article { grid-template-columns: 1fr 1fr; } }
+  img, .ph { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; background: var(--line); }
+  .ph { display: grid; place-items: center; font-size: 6rem; color: var(--muted); }
+  .cats { display: flex; gap: .6rem; margin: 0; font-size: .9rem; color: var(--muted); }
+  h1 { margin: .3rem 0; }
+  .precio { font-size: 1.4rem; font-weight: 700; }
+  s { color: var(--muted); font-weight: 400; margin-right: .5rem; }
+  .desc { margin-top: 2rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+</style>

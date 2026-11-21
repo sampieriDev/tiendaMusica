@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { checkoutUrl } from '../lib/woocommerce';
+---
+<Base title="Carrito">
+  <h1>Tu carrito</h1>
+  <shopping-cart data-checkout={checkoutUrl}>
+    <p class="vacio">Tu carrito está vacío. <a href="/productos">Ver productos</a></p>
+    <ul class="items"></ul>
+    <div class="resumen" hidden>
+      <p>Total: <strong class="total"></strong></p>
+      <a class="btn pagar" href="#">Pagar</a>
+      <p class="nota">Serás enviado al pago seguro de la tienda.</p>
+    </div>
+  </shopping-cart>
+</Base>
+<script>
+  import { onCartChange, setQty, formatMoney, buildCheckoutUrl, type CartItem } from '../scripts/cart';
+  class ShoppingCart extends HTMLElement {
+    connectedCallback() {
+      const list = this.querySelector('.items')!;
+      const resumen = this.querySelector('.resumen') as HTMLElement;
+      const vacio = this.querySelector('.vacio') as HTMLElement;
+      const pagar = this.querySelector('.pagar') as HTMLAnchorElement;
+      const base = this.dataset.checkout ?? '';
+
+      onCartChange((items: CartItem[]) => {
+        vacio.hidden = items.length > 0;
+        resumen.hidden = items.length === 0;
+        list.replaceChildren(...items.map((i) => {
+          const li = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = `/productos/${i.slug}`;
+          link.textContent = i.name;
+          const qty = document.createElement('input');
+          qty.type = 'number'; qty.min = '0'; qty.value = String(i.qty);
+          qty.setAttribute('aria-label', `Cantidad de ${i.name}`);
+          qty.addEventListener('change', () => setQty(i.id, Math.max(0, parseInt(qty.value, 10) || 0)));
+          const subtotal = document.createElement('span');
+          subtotal.textContent = formatMoney(Number(i.price) * i.qty, i.currency, i.minorUnit);
+          li.append(link, qty, subtotal);
+          return li;
+        }));
+        if (items.length) {
+          const total = items.reduce((s, i) => s + Number(i.price) * i.qty, 0);
+          this.querySelector('.total')!.textContent = formatMoney(total, items[0].currency, items[0].minorUnit);
+          if (base) pagar.href = buildCheckoutUrl(base, items);
+          else { pagar.removeAttribute('href'); pagar.title = 'Conecta WordPress para habilitar el pago'; }
+        }
+      });
+    }
+  }
+  customElements.define('shopping-cart', ShoppingCart);
+</script>
+<style>
+  .items { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+  .items :global(li) { display: grid; grid-template-columns: 1fr 5rem 7rem; gap: 1rem; align-items: center;
+    padding: .8rem 0; border-bottom: 1px solid var(--line); }
+  .items :global(input) { width: 100%; padding: .4rem; font: inherit; }
+  .items :global(span) { text-align: right; font-weight: 600; }
+  .nota { color: var(--muted); font-size: .9rem; }
+</style>

@@ -1,0 +1,65 @@
+---
+import { getCategories, usingDemoData } from '../lib/woocommerce';
+
+interface Props { title: string; description?: string }
+const { title, description = 'Instrumentos y accesorios musicales.' } = Astro.props;
+const categories = await getCategories();
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title} · Tienda de Música</title>
+  </head>
+  <body>
+    {usingDemoData && (
+      <p class="aviso">Mostrando productos de ejemplo. Define WORDPRESS_URL para usar el catálogo real.</p>
+    )}
+    <header>
+      <a class="logo" href="/">Tienda de Música</a>
+      <nav>
+        <a href="/productos">Productos</a>
+        {categories.map((c) => <a href={`/categoria/${c.slug}`}>{c.name}</a>)}
+        <a href="/carrito" class="carrito-link">Carrito (<span data-cart-count>0</span>)</a>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer>© {new Date().getFullYear()} Tienda de Música</footer>
+    <script>
+      import { onCartChange, cartCount } from '../scripts/cart';
+      onCartChange((items) => {
+        document.querySelectorAll('[data-cart-count]').forEach((el) => (el.textContent = String(cartCount(items))));
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #fafaf7; --fg: #1d1d1b; --muted: #6b6b66; --line: #e3e2dc;
+    --accent: #b4451f; --accent-fg: #fff; --card: #fff;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--fg); background: var(--bg);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161614; --fg: #eeede8; --muted: #a3a29b; --line: #2e2d2a; --card: #1f1e1b; --accent: #e0703f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { color: inherit; }
+  header { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center;
+    padding: 1rem; border-bottom: 1px solid var(--line); }
+  .logo { font-weight: 700; font-size: 1.2rem; text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+  nav a { text-decoration: none; color: var(--muted); }
+  nav a:hover, .carrito-link { color: var(--fg); }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  footer { text-align: center; color: var(--muted); padding: 2rem 1rem; border-top: 1px solid var(--line); }
+  .aviso { margin: 0; padding: .5rem 1rem; background: #fff4cc; color: #5a4600; text-align: center; font-size: .9rem; }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-fg); border: 0; border-radius: 6px;
+    padding: .7rem 1.2rem; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+</style>

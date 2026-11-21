@@ -1,0 +1,42 @@
+[
+  {
+    "id": 101, "name": "Guitarra acústica Clásica 39\"", "slug": "guitarra-acustica-clasica-39",
+    "short_description": "<p>Tapa de abeto, ideal para principiantes.</p>",
+    "description": "<p>Guitarra clásica de cuerdas de nylon con tapa de abeto y aros de caoba. Incluye funda.</p>",
+    "prices": { "price": "249900", "regular_price": "279900", "sale_price": "249900", "currency_code": "MXN", "currency_minor_unit": 2 },
+    "images": [], "categories": [{ "id": 1, "name": "Guitarras", "slug": "guitarras" }],
+    "is_in_stock": true, "is_purchasable": true, "on_sale": true
+  },
+  {
+    "id": 102, "name": "Guitarra eléctrica tipo Strat", "slug": "guitarra-electrica-strat",
+    "short_description": "<p>Tres pastillas single coil y puente trémolo.</p>",
+    "description": "<p>Cuerpo de álamo, mástil de maple y tres pastillas single coil.</p>",
+    "prices": { "price": "549900", "regular_price": "549900", "sale_price": "549900", "currency_code": "MXN", "currency_minor_unit": 2 },
+    "images": [], "categories": [{ "id": 1, "name": "Guitarras", "slug": "guitarras" }],
+    "is_in_stock": true, "is_purchasable": true, "on_sale": false
+  },
+  {
+    "id": 103, "name": "Teclado de 61 teclas", "slug": "teclado-61-teclas",
+    "short_description": "<p>Con 400 sonidos y función de aprendizaje.</p>",
+    "description": "<p>Teclado sensible al tacto con 400 sonidos, 200 ritmos y salida de audífonos.</p>",
+    "prices": { "price": "389900", "regular_price": "389900", "sale_price": "389900", "currency_code": "MXN", "currency_minor_unit": 2 },
+    "images": [], "categories": [{ "id": 2, "name": "Teclados", "slug": "teclados" }],
+    "is_in_stock": true, "is_purchasable": true, "on_sale": false
+  },
+  {
+    "id": 104, "name": "Juego de cuerdas para guitarra eléctrica", "slug": "cuerdas-guitarra-electrica",
+    "short_description": "<p>Calibre 10-46.</p>",
+    "description": "<p>Cuerdas de níquel calibre 10-46, sonido brillante y balanceado.</p>",
+    "prices": { "price": "19900", "regular_price": "19900", "sale_price": "19900", "currency_code": "MXN", "currency_minor_unit": 2 },
+    "images": [], "categories": [{ "id": 3, "name": "Accesorios", "slug": "accesorios" }],
+    "is_in_stock": true, "is_purchasable": true, "on_sale": false
+  },
+  {
+    "id": 105, "name": "Afinador cromático de clip", "slug": "afinador-cromatico-clip",
+    "short_description": "<p>Para guitarra, bajo, violín y ukulele.</p>",
+    "description": "<p>Afinador de clip con pantalla a color giratoria.</p>",
+    "prices": { "price": "24900", "regular_price": "24900", "sale_price": "24900", "currency_code": "MXN", "currency_minor_unit": 2 },
+    "images": [], "categories": [{ "id": 3, "name": "Accesorios", "slug": "accesorios" }],
+    "is_in_stock": false, "is_purchasable": true, "on_sale": false
+  }
+]
