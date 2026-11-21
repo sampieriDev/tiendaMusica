@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCategories, getProducts, type Category } from '../../lib/woocommerce';
+
+export async function getStaticPaths() {
+  const categories = await getCategories();
+  return categories.map((category) => ({ params: { slug: category.slug }, props: { category } }));
+}
+const { category } = Astro.props as { category: Category };
+const products = (await getProducts()).filter((p) => p.categories.some((c) => c.slug === category.slug));
+---
+<Base title={category.name}>
+  <h1>{category.name}</h1>
+  <div class="grid">{products.map((p) => <ProductCard product={p} />)}</div>
+</Base>

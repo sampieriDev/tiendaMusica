@@ -1,0 +1,27 @@
+---
+import type { Product } from '../lib/woocommerce';
+interface Props { product: Product }
+const { product: p } = Astro.props;
+const item = { id: p.id, name: p.name, slug: p.slug, price: p.prices.price,
+  currency: p.prices.currency_code, minorUnit: p.prices.currency_minor_unit };
+---
+<add-to-cart data-item={JSON.stringify(item)}>
+  <button class="btn" type="button" disabled={!p.is_in_stock || !p.is_purchasable}>
+    {p.is_in_stock ? 'Agregar al carrito' : 'Agotado'}
+  </button>
+  <span class="ok" hidden>Agregado ✓ <a href="/carrito">Ver carrito</a></span>
+</add-to-cart>
+<script>
+  import { addToCart } from '../scripts/cart';
+  class AddToCart extends HTMLElement {
+    connectedCallback() {
+      const item = JSON.parse(this.dataset.item!);
+      this.querySelector('button')!.addEventListener('click', () => {
+        addToCart(item);
+        (this.querySelector('.ok') as HTMLElement).hidden = false;
+      });
+    }
+  }
+  customElements.define('add-to-cart', AddToCart);
+</script>
+<style>.ok { margin-left: .8rem; }</style>

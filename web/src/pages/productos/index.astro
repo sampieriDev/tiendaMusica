@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getProducts } from '../../lib/woocommerce';
+const products = await getProducts();
+---
+<Base title="Productos">
+  <h1>Productos</h1>
+  <div class="grid">{products.map((p) => <ProductCard product={p} />)}</div>
+</Base>
